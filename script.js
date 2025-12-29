@@ -1,35 +1,36 @@
 /**
- * Groovy Music - Corrected & Optimized Logic
- * Fixes: Mobile player controls, icon toggling, state synchronization.
+ * Groovy Music - Rewritten & Optimized script.js
+ * Premium, clean, modular vanilla JS with enhanced live search, player sync, and local storage handling.
+ * Fully compatible with the updated index.html structure.
  */
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const API_URL = 'https://groovy-backend.alibagherpour-sadafi.workers.dev'; 
+    const API_URL = 'https://groovy-backend.alibagherpour-sadafi.workers.dev';
+    const cleanBaseUrl = API_URL.replace(/\/$/, '');
 
     let musicDatabase = [];
     let artistDatabase = [];
     let currentPlaylist = [];
     let currentSongIndex = 0;
-    // Detect if we are in a subfolder to fix navigation links
+
+    // Detect subfolder for correct navigation
     const isInPagesFolder = window.location.pathname.includes('/pages/');
 
-    // --- DOM Elements Selection ---
+    // DOM Elements
     const audio = document.getElementById('audio-player');
-    
-    // Containers
+
     const topChartsList = document.getElementById('top-charts-list');
-    const topArtistsContainer = document.getElementById('top-artists-container');
     const searchInput = document.getElementById('search-input');
     const searchResults = document.getElementById('search-results');
     const chartsSubtitle = document.getElementById('charts-subtitle');
-    
-    // Sidebar Elements
+
+    // Sidebar
     const sidebar = document.getElementById('main-sidebar');
     const overlay = document.getElementById('sidebar-overlay');
     const openSidebarBtn = document.getElementById('open-sidebar');
     const closeSidebarBtn = document.getElementById('close-sidebar');
 
-    // Player Bar Elements
+    // Player Bar
     const playerBar = document.getElementById('player-bar');
     const playerTitle = document.getElementById('player-title');
     const playerArtist = document.getElementById('player-artist');
@@ -40,12 +41,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     const currentTimeEl = document.getElementById('current-time');
     const totalDurationEl = document.getElementById('total-duration');
 
-    // Buttons & Icons (Desktop & Mobile)
+    // Controls
     const playPauseBtn = document.getElementById('play-pause-btn');
     const mobilePlayBtn = document.getElementById('mobile-play-pause-btn');
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
-    
+
     // Icons
     const desktopPlayIcon = document.getElementById('play-icon');
     const desktopPauseIcon = document.getElementById('pause-icon');
@@ -58,169 +59,127 @@ document.addEventListener('DOMContentLoaded', async () => {
     const FILTER_ARTIST_KEY = 'groovyFilterArtist';
 
     // =================================================================
-    // 1. Core Player Logic & State Management
+    // 1. Player State & UI Sync
     // =================================================================
 
-    /**
-     * Updates all Play/Pause icons (Desktop & Mobile) based on state.
-     * @param {boolean} isPlaying 
-     */
     function updatePlayerIcons(isPlaying) {
         if (isPlaying) {
-            // Show Pause, Hide Play
-            if(desktopPlayIcon) desktopPlayIcon.classList.add('hidden');
-            if(desktopPauseIcon) desktopPauseIcon.classList.remove('hidden');
-            if(mobilePlayIcon) mobilePlayIcon.classList.add('hidden');
-            if(mobilePauseIcon) mobilePauseIcon.classList.remove('hidden');
+            desktopPlayIcon?.classList.add('hidden');
+            desktopPauseIcon?.classList.remove('hidden');
+            mobilePlayIcon?.classList.add('hidden');
+            mobilePauseIcon?.classList.remove('hidden');
         } else {
-            // Show Play, Hide Pause
-            if(desktopPlayIcon) desktopPlayIcon.classList.remove('hidden');
-            if(desktopPauseIcon) desktopPauseIcon.classList.add('hidden');
-            if(mobilePlayIcon) mobilePlayIcon.classList.remove('hidden');
-            if(mobilePauseIcon) mobilePauseIcon.classList.add('hidden');
+            desktopPlayIcon?.classList.remove('hidden');
+            desktopPauseIcon?.classList.add('hidden');
+            mobilePlayIcon?.classList.remove('hidden');
+            mobilePauseIcon?.classList.add('hidden');
         }
     }
 
     function playSong() {
-        if (!audio.src) return;
-        audio.play().catch(e => console.error("Playback error:", e));
-        // The 'play' event listener will handle the UI update
+        audio.play().catch(e => console.error('Playback error:', e));
     }
 
     function pauseSong() {
         audio.pause();
-        // The 'pause' event listener will handle the UI update
     }
 
     function togglePlayPause() {
-        if (audio.paused) {
-            playSong();
-        } else {
-            pauseSong();
-        }
+        audio.paused ? playSong() : pauseSong();
     }
 
     function loadSong(index) {
         if (!currentPlaylist[index]) return;
         const song = currentPlaylist[index];
-        
-        // Update Audio Source
+
         audio.src = song.src;
-        
-        // Update Text Info
-        if (playerTitle) playerTitle.textContent = song.title;
-        if (playerArtist) playerArtist.textContent = song.artist;
-        if (playerCoverArt) playerCoverArt.src = song.cover;
+        playerTitle.textContent = song.title;
+        playerArtist.textContent = song.artist;
+        playerCoverArt.src = song.cover;
 
-        // Reset Progress
-        if (progressBar) progressBar.style.width = '0%';
-        if (mobileProgressBar) mobileProgressBar.style.width = '0%';
-        if (currentTimeEl) currentTimeEl.textContent = '0:00';
+        // Reset progress
+        progressBar.style.width = '0%';
+        mobileProgressBar.style.width = '0%';
+        currentTimeEl.textContent = '0:00';
 
-        // Update Hero Section if exists
+        // Update Hero if present
         const heroTitle = document.getElementById('hero-title');
-        if(heroTitle) {
+        if (heroTitle) {
             heroTitle.textContent = song.title;
             document.getElementById('hero-artist').textContent = song.artist;
             document.getElementById('hero-image').src = song.cover;
         }
 
-        // Show Player Bar (Animation)
-        if (playerBar) {
-            playerBar.classList.add('active');
-            // Force visibility styles just in case css class isn't enough
-            playerBar.style.opacity = '1';
-            playerBar.style.pointerEvents = 'auto';
-        }
+        // Show player notch
+        playerBar.classList.add('active');
 
-        // Save to History
         addSongToRecents(song);
     }
 
     function prevSong() {
-        currentSongIndex--;
-        if (currentSongIndex < 0) currentSongIndex = currentPlaylist.length - 1;
+        currentSongIndex = (currentSongIndex - 1 + currentPlaylist.length) % currentPlaylist.length;
         loadSong(currentSongIndex);
         playSong();
     }
 
     function nextSong() {
-        currentSongIndex++;
-        if (currentSongIndex >= currentPlaylist.length) currentSongIndex = 0;
+        currentSongIndex = (currentSongIndex + 1) % currentPlaylist.length;
         loadSong(currentSongIndex);
         playSong();
     }
 
     // =================================================================
-    // 2. Event Listeners (Audio & Controls)
+    // 2. Event Listeners
     // =================================================================
 
-    // Bind Controls
-    if(playPauseBtn) playPauseBtn.addEventListener('click', togglePlayPause);
-    if(mobilePlayBtn) mobilePlayBtn.addEventListener('click', togglePlayPause);
-    if(prevBtn) prevBtn.addEventListener('click', prevSong);
-    if(nextBtn) nextBtn.addEventListener('click', nextSong);
+    playPauseBtn?.addEventListener('click', togglePlayPause);
+    mobilePlayBtn?.addEventListener('click', togglePlayPause);
+    prevBtn?.addEventListener('click', prevSong);
+    nextBtn?.addEventListener('click', nextSong);
 
-    // Audio Events - Central Source of Truth for UI
+    // Audio events - central truth for UI
     audio.addEventListener('play', () => updatePlayerIcons(true));
     audio.addEventListener('pause', () => updatePlayerIcons(false));
     audio.addEventListener('ended', nextSong);
-    
-    // Progress Update
+
+    // Progress update
     audio.addEventListener('timeupdate', () => {
-        const { duration, currentTime } = audio;
-        if (duration) {
-            const percent = (currentTime / duration) * 100;
-            // Update Desktop Bar
-            if(progressBar) progressBar.style.width = `${percent}%`;
-            // Update Mobile Bar
-            if(mobileProgressBar) mobileProgressBar.style.width = `${percent}%`;
-            
-            // Update Text
-            if(currentTimeEl) currentTimeEl.textContent = formatTime(currentTime);
-            if(totalDurationEl) totalDurationEl.textContent = formatTime(duration);
-        }
+        if (!audio.duration) return;
+        const percent = (audio.currentTime / audio.duration) * 100;
+        progressBar.style.width = `${percent}%`;
+        mobileProgressBar.style.width = `${percent}%`;
+        currentTimeEl.textContent = formatTime(audio.currentTime);
+        totalDurationEl.textContent = formatTime(audio.duration);
     });
 
-    // Seek Functionality
-    if (progressContainer) {
-        progressContainer.addEventListener('click', (e) => {
-            const width = progressContainer.clientWidth;
-            const clickX = e.offsetX;
-            const duration = audio.duration;
-            if (duration) {
-                audio.currentTime = (clickX / width) * duration;
-            }
-        });
-    }
+    // Seek
+    progressContainer?.addEventListener('click', (e) => {
+        const width = progressContainer.clientWidth;
+        const clickX = e.offsetX;
+        audio.currentTime = (clickX / width) * audio.duration;
+    });
 
-    // =================================================================
-    // 3. UI Helper Functions
-    // =================================================================
-
+    // Sidebar toggle
     function toggleSidebar() {
-        if(sidebar) sidebar.classList.toggle('translate-x-full'); // For RTL: might need -translate-x-full based on dir
-        // Tailwind RTL check: standard 'translate-x-full' works if configured, 
-        // but for safety in generic HTML structures:
-        if (document.dir === 'rtl') {
-             // Logic handles CSS classes, assuming CSS handles direction
-        }
-        if(overlay) overlay.classList.toggle('hidden');
+        sidebar.classList.toggle('-translate-x-full');
+        overlay.classList.toggle('hidden');
     }
+    openSidebarBtn?.addEventListener('click', toggleSidebar);
+    closeSidebarBtn?.addEventListener('click', toggleSidebar);
+    overlay?.addEventListener('click', toggleSidebar);
 
-    if(openSidebarBtn) openSidebarBtn.addEventListener('click', toggleSidebar);
-    if(closeSidebarBtn) closeSidebarBtn.addEventListener('click', toggleSidebar);
-    if(overlay) overlay.addEventListener('click', toggleSidebar);
+    // =================================================================
+    // 3. Helpers
+    // =================================================================
 
     function formatTime(secs) {
         if (isNaN(secs)) return '0:00';
-        const min = Math.floor(secs / 60);
+        const m = Math.floor(secs / 60);
         const s = Math.floor(secs % 60);
-        return `${min}:${s < 10 ? '0' : ''}${s}`;
+        return `${m}:${s < 10 ? '0' : ''}${s}`;
     }
 
     function addSongToRecents(song) {
-        if (!song) return;
         let recents = JSON.parse(localStorage.getItem(RECENTS_KEY)) || [];
         recents = recents.filter(s => s.src !== song.src);
         recents.unshift(song);
@@ -232,22 +191,29 @@ document.addEventListener('DOMContentLoaded', async () => {
         return favs.includes(src);
     }
 
+    function toggleFavourite(src) {
+        let favs = JSON.parse(localStorage.getItem(FAVOURITES_KEY)) || [];
+        if (favs.includes(src)) {
+            favs = favs.filter(f => f !== src);
+        } else {
+            favs.push(src);
+        }
+        localStorage.setItem(FAVOURITES_KEY, JSON.stringify(favs));
+    }
+
     // =================================================================
-    // 4. Data Fetching & Rendering
+    // 4. Data & Rendering
     // =================================================================
 
     async function fetchData() {
         try {
-            // Remove trailing slash if present to avoid //all
-            const cleanBaseUrl = API_URL.replace(/\/$/, "");
-            const response = await fetch(`${cleanBaseUrl}/all`);
-            const data = await response.json();
+            const res = await fetch(`${cleanBaseUrl}/all`);
+            const data = await res.json();
             musicDatabase = data.songs || [];
             artistDatabase = data.artists || [];
             initializeUI();
-        } catch (error) {
-            console.error("Connection Error:", error);
-            // Fallback UI or retry logic could go here
+        } catch (err) {
+            console.error('Fetch error:', err);
         }
     }
 
@@ -257,30 +223,35 @@ document.addEventListener('DOMContentLoaded', async () => {
         currentPlaylist = [...songs];
 
         if (songs.length === 0) {
-            topChartsList.innerHTML = '<li class="text-gray-500 p-4 text-center">No songs found.</li>';
+            topChartsList.innerHTML = '<li class="p-4 text-center text-gray-500">No songs found.</li>';
             return;
         }
 
-        songs.forEach((song, index) => {
+        songs.forEach((song, idx) => {
             const li = document.createElement('li');
-            li.className = "flex items-center gap-3 p-3 rounded-xl bg-gray-800/40 hover:bg-gray-800 transition-all cursor-pointer group";
+            li.className = 'flex items-center gap-3 p-3 rounded-xl bg-gray-800/40 hover:bg-gray-800 transition-all cursor-pointer group';
             li.innerHTML = `
-                <img src="${song.cover}" class="w-12 h-12 rounded-lg object-cover shadow-sm" onerror="this.src='https://placehold.co/40x40'">
+                <img src="${song.cover}" class="w-12 h-12 rounded-lg object-cover" onerror="this.src='https://placehold.co/48x48'">
                 <div class="flex-1 min-w-0">
                     <h4 class="text-sm font-bold text-white truncate">${song.title}</h4>
                     <p class="text-xs text-gray-500 truncate">${song.artist}</p>
                 </div>
-                <button class="text-gray-500 hover:text-blue-500 p-2 fav-btn" data-src="${song.src}">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="${isSongFavourited(song.src) ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                <button class="fav-btn text-gray-500 hover:text-red-500 p-2" data-src="${song.src}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="${isSongFavourited(song.src) ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    </svg>
                 </button>
             `;
-            
+
             li.addEventListener('click', (e) => {
-                // Prevent playing if favourite button is clicked
-                if(e.target.closest('.fav-btn')) return;
-                
-                currentSongIndex = index;
-                loadSong(index);
+                if (e.target.closest('.fav-btn')) {
+                    e.stopPropagation();
+                    toggleFavourite(song.src);
+                    e.target.closest('.fav-btn').querySelector('svg').setAttribute('fill', isSongFavourited(song.src) ? 'currentColor' : 'none');
+                    return;
+                }
+                currentSongIndex = idx;
+                loadSong(idx);
                 playSong();
             });
 
@@ -288,109 +259,64 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    function renderTopArtists() {
-        if (!topArtistsContainer) return;
-        topArtistsContainer.innerHTML = '';
-        artistDatabase.slice(0, 6).forEach(artist => {
-            const div = document.createElement('div');
-            div.className = "flex-shrink-0 lg:flex items-center gap-3 bg-gray-800/40 p-2 lg:p-3 rounded-2xl cursor-pointer hover:bg-gray-800 transition-all min-w-[120px]";
-            div.innerHTML = `
-                <img src="${artist.image}" class="w-16 h-16 lg:w-12 lg:h-12 rounded-full object-cover mx-auto lg:mx-0 shadow-md">
-                <div class="text-center lg:text-right mt-2 lg:mt-0 overflow-hidden">
-                    <div class="text-white text-xs lg:text-sm font-bold truncate">${artist.name}</div>
-                    <div class="text-[10px] text-gray-500">${artist.followers || 'Fans'}</div>
-                </div>
-            `;
-            
-            div.addEventListener('click', () => {
-                localStorage.setItem('groovyFilterArtist', artist.name);
-                window.location.href = isInPagesFolder ? '../index.html' : 'index.html';
-            });
-
-            topArtistsContainer.appendChild(div);
-        });
-    }
-
-    function renderArtistsPage() {
-        const artistGrid = document.getElementById('artist-grid');
-        if (!artistGrid) return;
-        artistGrid.innerHTML = '';
-        artistDatabase.forEach(artist => {
-            const div = document.createElement('div');
-            div.className = "bg-gray-800 rounded-lg p-4 group cursor-pointer hover:bg-gray-700 artist-page-card";
-            div.innerHTML = `
-                <img src="${artist.image}" class="w-full h-auto rounded-full mb-3 shadow-lg aspect-square object-cover">
-                <h3 class="font-semibold text-white truncate text-center">${artist.name}</h3>
-                <p class="text-sm text-gray-400 text-center">${artist.followers} Followers</p>
-            `;
-            div.addEventListener('click', () => {
-                localStorage.setItem('groovyFilterArtist', artist.name);
-                window.location.href = '../index.html';
-            });
-            artistGrid.appendChild(div);
-        });
-    }
-
     // =================================================================
-    // 5. Search Logic (Live & Debounced)
+    // 5. Live Search
     // =================================================================
+
     let searchTimeout;
-    if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-            clearTimeout(searchTimeout);
-            const query = e.target.value.trim();
-            
-            if (query.length < 2) {
-                if(searchResults) searchResults.classList.add('hidden');
-                return;
-            }
+    searchInput?.addEventListener('input', (e) => {
+        clearTimeout(searchTimeout);
+        const query = e.target.value.trim();
 
-            searchTimeout = setTimeout(async () => {
-                try {
-                    const cleanBaseUrl = API_URL.replace(/\/$/, "");
-                    const res = await fetch(`${cleanBaseUrl}/search?q=${encodeURIComponent(query)}`);
-                    const data = await res.json();
-                    renderSearchResults(data.songs || [], data.artists || []);
-                } catch (e) { console.error("Search Error:", e); }
-            }, 300);
-        });
-    }
+        if (query.length < 2) {
+            searchResults?.classList.add('hidden');
+            return;
+        }
+
+        searchTimeout = setTimeout(async () => {
+            try {
+                const res = await fetch(`${cleanBaseUrl}/search?q=${encodeURIComponent(query)}`);
+                const data = await res.json();
+                renderSearchResults(data.songs || [], data.artists || []);
+            } catch (err) {
+                console.error('Search error:', err);
+            }
+        }, 300);
+    });
 
     function renderSearchResults(songs, artists) {
         if (!searchResults) return;
         searchResults.innerHTML = '';
-        
-        if (songs.length === 0 && (!artists || artists.length === 0)) {
+
+        if (songs.length === 0 && artists.length === 0) {
             searchResults.innerHTML = '<div class="p-4 text-sm text-gray-400 text-center">No results found.</div>';
         } else {
-            // Render Artists
-            if(artists && artists.length > 0) {
-                artists.forEach(artist => {
-                    const div = document.createElement('div');
-                    div.className = "flex items-center gap-3 p-3 cursor-pointer hover:bg-gray-700 transition-colors border-b border-gray-700/50";
-                    div.innerHTML = `
-                        <img src="${artist.image}" class="w-8 h-8 rounded-full object-cover">
-                        <div>
-                            <div class="text-white text-sm font-bold">${artist.name}</div>
-                            <div class="text-xs text-gray-400">Artist</div>
-                        </div>
-                    `;
-                    div.addEventListener('click', () => {
-                        localStorage.setItem('groovyFilterArtist', artist.name);
-                        window.location.href = isInPagesFolder ? '../index.html' : 'index.html';
-                    });
-                    searchResults.appendChild(div);
+            // Artists first
+            artists.forEach(artist => {
+                const div = document.createElement('div');
+                div.className = 'flex items-center gap-3 p-3 cursor-pointer hover:bg-gray-700/50 transition-colors';
+                div.innerHTML = `
+                    <img src="${artist.image}" class="w-10 h-10 rounded-full object-cover">
+                    <div>
+                        <div class="text-white font-bold">${artist.name}</div>
+                        <div class="text-xs text-gray-400">Artist</div>
+                    </div>
+                `;
+                div.addEventListener('click', () => {
+                    localStorage.setItem(FILTER_ARTIST_KEY, artist.name);
+                    window.location.href = isInPagesFolder ? '../index.html' : 'index.html';
                 });
-            }
+                searchResults.appendChild(div);
+            });
 
-            // Render Songs
+            // Songs
             songs.forEach(song => {
                 const div = document.createElement('div');
-                div.className = "flex items-center gap-3 p-3 cursor-pointer hover:bg-gray-700 transition-colors border-b border-gray-700/50";
+                div.className = 'flex items-center gap-3 p-3 cursor-pointer hover:bg-gray-700/50 transition-colors';
                 div.innerHTML = `
-                    <img src="${song.cover}" class="w-8 h-8 rounded object-cover">
+                    <img src="${song.cover}" class="w-10 h-10 rounded object-cover">
                     <div>
-                        <div class="text-white text-sm font-bold">${song.title}</div>
+                        <div class="text-white font-bold">${song.title}</div>
                         <div class="text-xs text-gray-400">${song.artist}</div>
                     </div>
                 `;
@@ -400,7 +326,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     loadSong(0);
                     playSong();
                     searchResults.classList.add('hidden');
-                    if (searchInput) searchInput.value = '';
+                    searchInput.value = '';
                 });
                 searchResults.appendChild(div);
             });
@@ -408,59 +334,48 @@ document.addEventListener('DOMContentLoaded', async () => {
         searchResults.classList.remove('hidden');
     }
 
-    // Close search on outside click
+    // Close search dropdown on outside click
     document.addEventListener('click', (e) => {
-        if (searchResults && !e.target.closest('#search-container')) {
-            searchResults.classList.add('hidden');
+        if (!e.target.closest('#search-container')) {
+            searchResults?.classList.add('hidden');
         }
     });
 
     // =================================================================
-    // 6. Initialization
+    // 6. Page Initialization
     // =================================================================
-    function initializeUI() {
-        const pageTitle = document.title;
-        const filterArtist = localStorage.getItem(FILTER_ARTIST_KEY);
 
-        // Page Routing Logic
+    function initializeUI() {
+        const filterArtist = localStorage.getItem(FILTER_ARTIST_KEY);
+        const pageTitle = document.title;
+
         if (filterArtist && !isInPagesFolder) {
             const filtered = musicDatabase.filter(s => s.artist === filterArtist);
             renderTopCharts(filtered);
-            if(chartsSubtitle) chartsSubtitle.textContent = `Songs by ${filterArtist}`;
+            chartsSubtitle && (chartsSubtitle.textContent = `Songs by ${filterArtist}`);
             localStorage.removeItem(FILTER_ARTIST_KEY);
         } else if (pageTitle.includes('Recently Played')) {
             const recents = JSON.parse(localStorage.getItem(RECENTS_KEY)) || [];
             renderTopCharts(recents);
-            // Clear button
-            const clearBtn = document.getElementById('clear-recent');
-            if(clearBtn) {
-                clearBtn.addEventListener('click', () => {
-                    localStorage.removeItem(RECENTS_KEY);
-                    renderTopCharts([]);
-                });
-            }
         } else if (pageTitle.includes('Favourites')) {
-            const favs = JSON.parse(localStorage.getItem(FAVOURITES_KEY)) || [];
-            const favSongs = favs.map(src => musicDatabase.find(s => s.src === src)).filter(Boolean);
+            const favSrcs = JSON.parse(localStorage.getItem(FAVOURITES_KEY)) || [];
+            const favSongs = favSrcs.map(src => musicDatabase.find(s => s.src === src)).filter(Boolean);
             renderTopCharts(favSongs);
-        } else if (pageTitle.includes('Artists')) {
-            renderArtistsPage();
-        } else if (topChartsList) {
+        } else {
             renderTopCharts(musicDatabase);
         }
 
-        renderTopArtists();
-
-        // Listen Now Button (Hero)
-        const heroPlayBtn = document.getElementById('hero-play-btn');
-        if (heroPlayBtn && musicDatabase.length > 0) {
-            heroPlayBtn.addEventListener('click', () => {
+        // Hero "Listen Now"
+        const heroBtn = document.getElementById('hero-play-btn');
+        if (heroBtn && musicDatabase.length > 0) {
+            heroBtn.addEventListener('click', () => {
                 currentPlaylist = [...musicDatabase];
                 currentSongIndex = 0;
                 loadSong(0);
                 playSong();
             });
         }
-   }
+    }
+
     fetchData();
 });
