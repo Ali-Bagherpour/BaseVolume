@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recently Played - Groovy</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Vazirmatn:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'Vazirmatn', 'sans-serif'],
+                    },
+                    colors: {
+                        gray: {
+                            900: '#121212',
+                            950: '#0A0A0A',
+                            800: '#181818',
+                            700: '#282828',
+                            600: '#3E3E3E',
+                            500: '#535353',
+                            400: '#B3B3B3',
+                        },
+                        blue: {
+                            600: '#2D76F6',
+                            500: '#4F8AFA',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Global Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0A0A0A; }
+        ::-webkit-scrollbar-thumb { background: #3E3E3E; border-radius: 10px; }
+        
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .sidebar-transition { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+
+        /* Glassmorphism Utility */
+        .glass-effect { background: rgba(10, 10, 10, 0.75); backdrop-filter: blur(12px); }
+
+        /* Notch Player Glass */
+        .glass-notch { 
+            background: rgba(20, 20, 20, 0.85); 
+            backdrop-filter: blur(28px) saturate(180%); 
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+        }
+
+        /* Premium Cards */
+        .premium-card { transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.03); }
+        .premium-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
+
+        /* Progress Bars */
+        #progress-bar, #mobile-progress-bar { transition: width 0.1s linear; }
+
+        /* Notch Player Animation */
+        #player-bar {
+            left: 50%;
+            transform: translate(-50%, 150%);
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+        }
+        #player-bar.active {
+            transform: translate(-50%, 0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Live Search Dropdown */
+        #search-results {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+        #search-results.hidden {
+            animation: fadeOut 0.2s ease-in forwards;
+            display: none !important;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-8px); } }
+
+        #search-results::-webkit-scrollbar { width: 6px; }
+        #search-results::-webkit-scrollbar-track { background: transparent; }
+        #search-results::-webkit-scrollbar-thumb { background: #3E3E3E; border-radius: 3px; }
+    </style>
+</head>
+<body class="bg-gray-950 text-gray-300 font-sans antialiased overflow-hidden">
+
+    <div class="flex h-screen overflow-hidden relative">
+        
+        <!-- Mobile Overlay -->
+        <div id="sidebar-overlay" class="fixed inset-0 bg-black/70 z-40 hidden lg:hidden transition-opacity"></div>
+
+        <!-- Sidebar -->
+        <aside id="main-sidebar" class="fixed lg:static inset-y-0 left-0 w-64 bg-gray-950/90 glass-effect p-6 z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-400 flex flex-col border-r border-gray-800">
+            <div class="flex items-center gap-3 mb-10">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <circle cx="16" cy="16" r="16" fill="url(#logo-gradient)"/>
+                    <path d="M11.5 22.1818V9.81818C11.5 9.39773 11.9167 9.13636 12.2917 9.31818L22.2083 15.5C22.5833 15.6818 22.5833 16.3182 22.2083 16.5L12.2917 22.6818C11.9167 22.8636 11.5 22.6023 11.5 22.1818Z" fill="white"/>
+                    <defs>
+                        <linearGradient id="logo-gradient" x1="0" y1="0" x2="32" y2="32">
+                            <stop stop-color="#4F46E5"/>
+                            <stop offset="1" stop-color="#2D76F6"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span class="font-bold text-xl text-white tracking-tight">Groovy</span>
+            </div>
+
+            <nav class="space-y-8 flex-1">
+                <div>
+                    <h3 class="text-[10px] text-gray-500 uppercase font-bold tracking-[0.2em] mb-4 px-2">Menu</h3>
+                    <ul class="space-y-1">
+                        <li><a href="../index.html" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800 transition-all">Explore</a></li>
+                        <li><a href="genres.html" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800 transition-all">Genres</a></li>
+                        <li><a href="artists.html" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800 transition-all">Artists</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-[10px] text-gray-500 uppercase font-bold tracking-[0.2em] mb-4 px-2">Library</h3>
+                    <ul class="space-y-1">
+                        <li><a href="recent.html" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-white bg-gray-800 font-medium shadow-lg">Recent</a></li>
+                        <li><a href="favourites.html" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800 transition-all">Favourites</a></li>
+                    </ul>
+                </div>
+            </nav>
+            <button id="close-sidebar" class="lg:hidden absolute top-4 right-4 text-gray-400 hover:text-white">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <!-- Header -->
+            <header class="bg-gray-950/80 glass-effect border-b border-gray-800 p-4 sticky top-0 z-30">
+                <div class="flex items-center max-w-7xl mx-auto w-full">
+                    <div class="flex items-center gap-4 w-1/4">
+                        <button id="open-sidebar" class="lg:hidden text-gray-400 hover:text-white p-2 bg-gray-800 rounded-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+                        </button>
+                        <h2 class="text-xs font-black text-gray-500 uppercase tracking-[0.3em] hidden lg:block">History</h2>
+                    </div>
+
+                    <!-- Live Search -->
+                    <div class="flex-1 flex justify-center">
+                        <div class="w-full max-w-lg relative group" id="search-container">
+                            <input type="text" id="search-input" placeholder="Search songs & artists..." class="w-full bg-gray-800/80 backdrop-blur-md border border-gray-700 rounded-full px-12 py-3 text-sm text-gray-200 outline-none focus:ring-2 focus:ring-blue-600 transition-all placeholder-gray-500">
+                            <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 group-focus-within:text-blue-500 transition-colors pointer-events-none">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                            </div>
+                            <div id="search-results" class="absolute z-50 w-full top-14 max-h-96 overflow-y-auto bg-gray-900/90 glass-effect border border-gray-700/50 rounded-3xl shadow-2xl backdrop-blur-xl hidden"></div>
+                        </div>
+                    </div>
+
+                    <!-- Login -->
+                    <div class="w-1/4 flex justify-end">
+                        <a href="../login.html" class="flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white rounded-full text-sm font-bold transition-all shadow-lg shadow-blue-600/30 active:scale-95">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                            <span class="hidden sm:inline">Login</span>
+                            <span class="sm:hidden">Sign In</span>
+                        </a>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Scrollable Area -->
+            <main class="flex-1 overflow-y-auto p-4 md:p-8 pb-40">
+                <div class="max-w-7xl mx-auto">
+                    <div class="flex items-center justify-between mb-8">
+                        <div>
+                            <h1 class="text-4xl font-bold text-white mb-2">Recently Played</h1>
+                            <p class="text-gray-400">Your listening history across all devices.</p>
+                        </div>
+                        <button id="clear-history-btn" class="text-xs text-red-500 hover:text-red-400 font-bold border border-red-500/30 hover:bg-red-500/10 px-4 py-2 rounded-lg transition-all">
+                            Clear History
+                        </button>
+                    </div>
+
+                    <!-- Recent List Container -->
+                    <div class="bg-gray-800/20 rounded-[2rem] border border-gray-800/40 p-4">
+                        <ul id="full-recent-list" class="space-y-2">
+                            <!-- Filled by JS -->
+                            <li class="p-8 text-center text-gray-500 italic">Loading history...</li>
+                        </ul>
+                    </div>
+                </div>
+            </main>
+
+            <!-- Notch Player -->
+            <div id="player-bar" class="fixed bottom-8 glass-notch rounded-[2.5rem] p-4 z-50 w-[92%] max-w-5xl overflow-hidden">
+                <div class="absolute top-0 left-0 right-0 h-1 bg-white/5 md:hidden"><div id="mobile-progress-bar" class="h-full bg-blue-500 w-0"></div></div>
+                <div class="max-w-screen-2xl mx-auto flex items-center justify-between gap-6 px-2">
+                    <div class="flex items-center gap-4 flex-1 min-w-0">
+                        <img id="player-cover-art" src="https://placehold.co/100x100/333/FFF?text=Groovy" class="w-12 h-12 rounded-2xl object-cover shadow-lg border border-white/5">
+                        <div class="overflow-hidden">
+                            <h4 id="player-title" class="font-bold text-white text-sm truncate">Ready to Play</h4>
+                            <p id="player-artist" class="text-[10px] text-gray-400 truncate uppercase tracking-wider">Select a song...</p>
+                        </div>
+                    </div>
+
+                    <div class="hidden md:flex flex-col items-center gap-2 flex-1 max-w-xl">
+                        <div class="flex items-center gap-8">
+                            <button id="prev-btn" class="text-gray-400 hover:text-white"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg></button>
+                            <button id="play-pause-btn" class="w-11 h-11 bg-white text-black rounded-full flex items-center justify-center hover:scale-105 active:scale-95 shadow-xl">
+                                <span id="play-icon" class="text-base mr-0.5">▶</span>
+                                <span id="pause-icon" class="hidden text-base">❚❚</span>
+                            </button>
+                            <button id="next-btn" class="text-gray-400 hover:text-white"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
+                        </div>
+                        <div class="w-full flex items-center gap-3 px-4">
+                            <span id="current-time" class="text-[9px] font-bold text-gray-500 w-8 text-right">0:00</span>
+                            <div id="progress-container" class="flex-1 h-1 bg-white/10 rounded-full cursor-pointer relative group">
+                                <div id="progress-bar" class="absolute inset-y-0 left-0 bg-blue-500 rounded-full w-0">
+                                    <div class="absolute right-0 top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-white rounded-full shadow-xl scale-0 group-hover:scale-100 transition-transform"></div>
+                                </div>
+                            </div>
+                            <span id="total-duration" class="text-[9px] font-bold text-gray-500 w-8">0:00</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center justify-end gap-4 flex-1">
+                        <button id="mobile-play-pause-btn" class="md:hidden w-10 h-10 bg-white text-black rounded-full flex items-center justify-center shadow-lg">
+                            <svg id="mobile-play-icon" class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            <svg id="mobile-pause-icon" class="w-4 h-4 hidden" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="audio-player" preload="metadata"></audio>
+
+    <!-- Page Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const RECENTS_KEY = 'groovyRecentSongs';
+            const recentList = document.getElementById('full-recent-list');
+            const clearBtn = document.getElementById('clear-history-btn');
+            
+            // Player Elements
+            const audio = document.getElementById('audio-player');
+            const playerBar = document.getElementById('player-bar');
+            const playerTitle = document.getElementById('player-title');
+            const playerArtist = document.getElementById('player-artist');
+            const playerCoverArt = document.getElementById('player-cover-art');
+            const progressBar = document.getElementById('progress-bar');
+            const mobileProgressBar = document.getElementById('mobile-progress-bar');
+            const progressContainer = document.getElementById('progress-container');
+            const currentTimeEl = document.getElementById('current-time');
+            const totalDurationEl = document.getElementById('total-duration');
+            const playPauseBtn = document.getElementById('play-pause-btn');
+            const mobilePlayBtn = document.getElementById('mobile-play-pause-btn');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const desktopPlayIcon = document.getElementById('play-icon');
+            const desktopPauseIcon = document.getElementById('pause-icon');
+            const mobilePlayIcon = document.getElementById('mobile-play-icon');
+            const mobilePauseIcon = document.getElementById('mobile-pause-icon');
+
+            let currentPlaylist = [];
+            let currentSongIndex = 0;
+
+            // --- 1. Render Recent List ---
+            function loadRecents() {
+                const recents = JSON.parse(localStorage.getItem(RECENTS_KEY)) || [];
+                currentPlaylist = recents; // Set playlist context
+
+                if (recents.length === 0) {
+                    recentList.innerHTML = `
+                        <li class="p-12 text-center flex flex-col items-center gap-4">
+                            <div class="bg-gray-800 p-4 rounded-full text-gray-600">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                            </div>
+                            <span class="text-gray-500">No recently played songs yet. Start exploring!</span>
+                            <a href="../index.html" class="text-blue-500 font-bold hover:underline">Go to Explore</a>
+                        </li>
+                    `;
+                    playerBar.classList.remove('active'); // Hide player if empty
+                    return;
+                }
+
+                recentList.innerHTML = recents.map((song, idx) => `
+                    <li class="song-item flex items-center gap-4 p-3 rounded-2xl hover:bg-white/5 transition-all cursor-pointer group border border-transparent hover:border-white/5" data-idx="${idx}">
+                        <div class="relative">
+                            <img src="${song.cover}" class="w-14 h-14 rounded-xl object-cover shadow-lg" onerror="this.src='https://placehold.co/56x56'">
+                            <div class="absolute inset-0 bg-black/40 rounded-xl opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-base font-bold text-white truncate">${song.title}</h4>
+                            <p class="text-xs text-gray-500 truncate">${song.artist}</p>
+                        </div>
+                        <div class="text-xs text-gray-600 font-mono hidden sm:block">Played recently</div>
+                    </li>
+                `).join('');
+
+                // Attach Listeners
+                document.querySelectorAll('.song-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const idx = parseInt(item.getAttribute('data-idx'));
+                        currentSongIndex = idx;
+                        loadSong(idx);
+                        playSong();
+                    });
+                });
+            }
+
+            // --- 2. Player Logic ---
+            function loadSong(index) {
+                if (!currentPlaylist[index]) return;
+                const song = currentPlaylist[index];
+
+                audio.src = song.src;
+                playerTitle.textContent = song.title;
+                playerArtist.textContent = song.artist;
+                playerCoverArt.src = song.cover;
+                
+                progressBar.style.width = '0%';
+                mobileProgressBar.style.width = '0%';
+                currentTimeEl.textContent = '0:00';
+                
+                playerBar.classList.add('active'); // Show player
+            }
+
+            function playSong() { audio.play().catch(e => console.error(e)); }
+            function pauseSong() { audio.pause(); }
+            function togglePlayPause() { audio.paused ? playSong() : pauseSong(); }
+            
+            function updatePlayerIcons(isPlaying) {
+                if (isPlaying) {
+                    desktopPlayIcon?.classList.add('hidden');
+                    desktopPauseIcon?.classList.remove('hidden');
+                    mobilePlayIcon?.classList.add('hidden');
+                    mobilePauseIcon?.classList.remove('hidden');
+                } else {
+                    desktopPlayIcon?.classList.remove('hidden');
+                    desktopPauseIcon?.classList.add('hidden');
+                    mobilePlayIcon?.classList.remove('hidden');
+                    mobilePauseIcon?.classList.add('hidden');
+                }
+            }
+
+            function nextSong() {
+                if (currentPlaylist.length === 0) return;
+                currentSongIndex = (currentSongIndex + 1) % currentPlaylist.length;
+                loadSong(currentSongIndex);
+                playSong();
+            }
+
+            function prevSong() {
+                if (currentPlaylist.length === 0) return;
+                currentSongIndex = (currentSongIndex - 1 + currentPlaylist.length) % currentPlaylist.length;
+                loadSong(currentSongIndex);
+                playSong();
+            }
+
+            playPauseBtn?.addEventListener('click', togglePlayPause);
+            mobilePlayBtn?.addEventListener('click', togglePlayPause);
+            nextBtn?.addEventListener('click', nextSong);
+            prevBtn?.addEventListener('click', prevSong);
+            
+            audio.addEventListener('play', () => updatePlayerIcons(true));
+            audio.addEventListener('pause', () => updatePlayerIcons(false));
+            audio.addEventListener('ended', nextSong);
+            audio.addEventListener('timeupdate', () => {
+                if (!audio.duration) return;
+                const percent = (audio.currentTime / audio.duration) * 100;
+                progressBar.style.width = `${percent}%`;
+                mobileProgressBar.style.width = `${percent}%`;
+                currentTimeEl.textContent = formatTime(audio.currentTime);
+                totalDurationEl.textContent = formatTime(audio.duration);
+            });
+
+            progressContainer?.addEventListener('click', (e) => {
+                const width = progressContainer.clientWidth;
+                const clickX = e.offsetX;
+                audio.currentTime = (clickX / width) * audio.duration;
+            });
+
+            function formatTime(secs) {
+                if (isNaN(secs)) return '0:00';
+                const m = Math.floor(secs / 60);
+                const s = Math.floor(secs % 60);
+                return `${m}:${s < 10 ? '0' : ''}${s}`;
+            }
+
+            // --- 3. Clear History ---
+            clearBtn?.addEventListener('click', () => {
+                if(confirm('Are you sure you want to clear your listening history?')) {
+                    localStorage.removeItem(RECENTS_KEY);
+                    loadRecents(); // Reload UI
+                }
+            });
+
+            // --- 4. Sidebar & Search (Shared Logic) ---
+            const sidebar = document.getElementById('main-sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            const openSidebarBtn = document.getElementById('open-sidebar');
+            const closeSidebarBtn = document.getElementById('close-sidebar');
+
+            function toggleSidebar() {
+                sidebar.classList.toggle('-translate-x-full');
+                overlay.classList.toggle('hidden');
+            }
+            openSidebarBtn?.addEventListener('click', toggleSidebar);
+            closeSidebarBtn?.addEventListener('click', toggleSidebar);
+            overlay?.addEventListener('click', toggleSidebar);
+
+            // Live Search
+            const searchInput = document.getElementById('search-input');
+            const searchResults = document.getElementById('search-results');
+            const API_URL = 'https://groovy-backend.alibagherpour-sadafi.workers.dev'; 
+            const cleanBaseUrl = API_URL.replace(/\/$/, '');
+            let searchTimeout;
+
+            searchInput?.addEventListener('input', (e) => {
+                clearTimeout(searchTimeout);
+                const query = e.target.value.trim();
+                if (query.length < 2) { searchResults?.classList.add('hidden'); return; }
+
+                searchTimeout = setTimeout(async () => {
+                    try {
+                        const res = await fetch(`${cleanBaseUrl}/search?q=${encodeURIComponent(query)}`);
+                        const data = await res.json();
+                        renderSearchResults(data.songs || [], data.artists || []);
+                    } catch (err) { console.error(err); }
+                }, 300);
+            });
+
+            function renderSearchResults(songs, artists) {
+                if (!searchResults) return;
+                searchResults.innerHTML = '';
+                if (songs.length === 0 && artists.length === 0) {
+                    searchResults.innerHTML = '<div class="p-4 text-sm text-gray-400 text-center">No results found.</div>';
+                } else {
+                    artists.forEach(artist => {
+                        const div = document.createElement('div');
+                        div.className = 'flex items-center gap-3 p-3 cursor-pointer hover:bg-gray-700/50 transition-colors';
+                        div.innerHTML = `<img src="${artist.image}" class="w-10 h-10 rounded-full object-cover"><div><div class="text-white font-bold">${artist.name}</div><div class="text-xs text-gray-400">Artist</div></div>`;
+                        div.addEventListener('click', () => { localStorage.setItem('groovyFilterArtist', artist.name); window.location.href = '../index.html'; });
+                        searchResults.appendChild(div);
+                    });
+                    songs.forEach(song => {
+                        const div = document.createElement('div');
+                        div.className = 'flex items-center gap-3 p-3 cursor-pointer hover:bg-gray-700/50 transition-colors';
+                        div.innerHTML = `<img src="${song.cover}" class="w-10 h-10 rounded object-cover"><div><div class="text-white font-bold">${song.title}</div><div class="text-xs text-gray-400">${song.artist}</div></div>`;
+                        div.addEventListener('click', () => { window.location.href = '../index.html'; });
+                        searchResults.appendChild(div);
+                    });
+                }
+                searchResults.classList.remove('hidden');
+            }
+            document.addEventListener('click', (e) => { if (!e.target.closest('#search-container')) searchResults?.classList.add('hidden'); });
+
+            // Init
+            loadRecents();
+        });
+    </script>
+</body>
+</html>
