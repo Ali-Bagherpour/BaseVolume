@@ -37,8 +37,6 @@
         }
     </script>
     <style>
-        /* --- Styles from style.css & index.html --- */
-
         /* Global Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #0A0A0A; }
@@ -122,16 +120,16 @@
                 <div>
                     <h3 class="text-[10px] text-gray-500 uppercase font-bold tracking-[0.2em] mb-4 px-2">Menu</h3>
                     <ul class="space-y-1">
-                        <li><a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-white bg-gray-800 font-medium shadow-lg">Explore</a></li>
-                        <li><a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800 transition-all">Genres</a></li>
-                        <li><a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800 transition-all">Artists</a></li>
+                        <li><a href="index.html" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-white bg-gray-800 font-medium shadow-lg">Explore</a></li>
+                        <li><a href="pages/genres.html" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800 transition-all">Genres</a></li>
+                        <li><a href="pages/artists.html" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800 transition-all">Artists</a></li>
                     </ul>
                 </div>
                 <div>
                     <h3 class="text-[10px] text-gray-500 uppercase font-bold tracking-[0.2em] mb-4 px-2">Library</h3>
                     <ul class="space-y-1">
-                        <li><a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800 transition-all">Recent</a></li>
-                        <li><a href="#" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800 transition-all">Favourites</a></li>
+                        <li><a href="pages/recent.html" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800 transition-all">Recent</a></li>
+                        <li><a href="pages/favourites.html" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800 transition-all">Favourites</a></li>
                     </ul>
                 </div>
             </nav>
@@ -165,7 +163,7 @@
 
                     <!-- Login -->
                     <div class="w-1/4 flex justify-end">
-                        <a href="#" class="flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white rounded-full text-sm font-bold transition-all shadow-lg shadow-blue-600/30 active:scale-95">
+                        <a href="login.html" class="flex items-center gap-2 px-6 py-2.5 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white rounded-full text-sm font-bold transition-all shadow-lg shadow-blue-600/30 active:scale-95">
                             <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
                             <span class="hidden sm:inline">Login</span>
                             <span class="sm:hidden">Sign In</span>
@@ -199,7 +197,7 @@
                             <section>
                                 <div class="flex items-center justify-between mb-6">
                                     <h2 class="text-2xl font-bold text-white">Genres</h2>
-                                    <a href="#" class="text-blue-500 text-xs font-bold hover:underline">Explore all</a>
+                                    <a href="pages/genres.html" class="text-blue-500 text-xs font-bold hover:underline">Explore all</a>
                                 </div>
                                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                                     <div class="aspect-square rounded-3xl bg-gradient-to-br from-pink-500 to-rose-600 p-6 flex flex-col justify-end premium-card shadow-lg"><span class="text-xl font-bold text-white">Pop</span></div>
@@ -213,7 +211,7 @@
                             <section>
                                 <div class="flex items-center justify-between mb-6">
                                     <h2 class="text-2xl font-bold text-white">Recently Listened</h2>
-                                    <a href="#" class="text-blue-500 text-xs font-bold hover:underline">View history</a>
+                                    <a href="pages/recent.html" class="text-blue-500 text-xs font-bold hover:underline">View history</a>
                                 </div>
                                 <div class="bg-gray-800/20 rounded-[2rem] border border-gray-800/40 p-3">
                                     <ul id="recent-songs-list" class="space-y-1"><li class="p-4 text-center text-gray-500 italic">No recently played songs</li></ul>
@@ -282,8 +280,8 @@
     
     <script>
         /**
-         * Groovy Music - Rewritten & Optimized script.js
-         * Merged for Single File compatibility.
+         * Groovy Music - Complete Logic for Main Page
+         * Includes: Live Search, Advanced Player, Recents, Favourites
          */
 
         document.addEventListener('DOMContentLoaded', async () => {
@@ -295,16 +293,13 @@
             let currentPlaylist = [];
             let currentSongIndex = 0;
 
-            // Detect subfolder for correct navigation (Simplified for single file view)
-            const isInPagesFolder = window.location.pathname.includes('/pages/');
-
             // DOM Elements
             const audio = document.getElementById('audio-player');
-
             const topChartsList = document.getElementById('top-charts-list');
             const searchInput = document.getElementById('search-input');
             const searchResults = document.getElementById('search-results');
             const chartsSubtitle = document.getElementById('charts-subtitle');
+            const recentList = document.getElementById('recent-songs-list');
 
             // Sidebar
             const sidebar = document.getElementById('main-sidebar');
@@ -468,6 +463,11 @@
                 recents = recents.filter(s => s.src !== song.src);
                 recents.unshift(song);
                 localStorage.setItem(RECENTS_KEY, JSON.stringify(recents.slice(0, 20)));
+                
+                // Update the mini recent list on the sidebar if it exists or in the main grid
+                if(recentList) {
+                    renderRecentList(recents.slice(0, 5)); // Show top 5 in mini list
+                }
             }
 
             function isSongFavourited(src) {
@@ -497,6 +497,7 @@
                     
                     musicDatabase = data.songs || [];
                     artistDatabase = data.artists || [];
+                    
                     initializeUI();
                     console.log("Loaded data from API successfully");
                 } catch (err) {
@@ -549,6 +550,37 @@
                 });
             }
 
+            function renderRecentList(songs) {
+                if (!recentList) return;
+                recentList.innerHTML = '';
+                
+                if (songs.length === 0) {
+                    recentList.innerHTML = '<li class="p-4 text-center text-gray-500 text-xs">No recent songs</li>';
+                    return;
+                }
+
+                songs.forEach((song, idx) => {
+                    const li = document.createElement('li');
+                    li.className = 'flex items-center gap-3 p-2 rounded-xl hover:bg-gray-800 transition-all cursor-pointer group';
+                    li.innerHTML = `
+                        <img src="${song.cover}" class="w-8 h-8 rounded object-cover" onerror="this.src='https://placehold.co/32x32'">
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-xs font-bold text-white truncate">${song.title}</h4>
+                            <p class="text-[10px] text-gray-500 truncate">${song.artist}</p>
+                        </div>
+                    `;
+                    li.addEventListener('click', () => {
+                        // Play this song. Note: We create a temporary playlist for recents if clicked from here,
+                        // or just play it individually. For simplicity, we play it and set context.
+                        currentPlaylist = songs;
+                        currentSongIndex = idx;
+                        loadSong(idx);
+                        playSong();
+                    });
+                    recentList.appendChild(li);
+                });
+            }
+
             // =================================================================
             // 5. Live Search
             // =================================================================
@@ -593,8 +625,8 @@
                             </div>
                         `;
                         div.addEventListener('click', () => {
+                            // Filter main view by artist
                             localStorage.setItem(FILTER_ARTIST_KEY, artist.name);
-                            // In single-file mode, we just reload/reset to home view logic
                             window.location.reload(); 
                         });
                         searchResults.appendChild(div);
@@ -638,20 +670,16 @@
 
             function initializeUI() {
                 const filterArtist = localStorage.getItem(FILTER_ARTIST_KEY);
-                const pageTitle = document.title;
+                
+                // Initialize Recents List in sidebar
+                const recents = JSON.parse(localStorage.getItem(RECENTS_KEY)) || [];
+                renderRecentList(recents.slice(0, 5));
 
-                if (filterArtist && !isInPagesFolder) {
+                if (filterArtist) {
                     const filtered = musicDatabase.filter(s => s.artist === filterArtist);
                     renderTopCharts(filtered);
                     chartsSubtitle && (chartsSubtitle.textContent = `Songs by ${filterArtist}`);
                     localStorage.removeItem(FILTER_ARTIST_KEY);
-                } else if (pageTitle.includes('Recently Played')) {
-                    const recents = JSON.parse(localStorage.getItem(RECENTS_KEY)) || [];
-                    renderTopCharts(recents);
-                } else if (pageTitle.includes('Favourites')) {
-                    const favSrcs = JSON.parse(localStorage.getItem(FAVOURITES_KEY)) || [];
-                    const favSongs = favSrcs.map(src => musicDatabase.find(s => s.src === src)).filter(Boolean);
-                    renderTopCharts(favSongs);
                 } else {
                     renderTopCharts(musicDatabase);
                 }
