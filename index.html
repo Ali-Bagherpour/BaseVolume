@@ -241,14 +241,13 @@
                                 </div>
                                 <div class="bg-gray-800/20 rounded-[2rem] border border-gray-800/40 p-3">
                                     <ul id="recent-songs-list" class="space-y-1">
-                                        <!-- This can be populated via app.js targeting this ID -->
                                         <li class="p-4 text-center text-gray-500 italic">No recently played songs</li>
                                     </ul>
                                 </div>
                             </section>
                         </div>
 
-                        <!-- Right Column: Top Charts (Moved Here) -->
+                        <!-- Right Column: Top Charts -->
                         <section class="xl:col-span-1">
                             <div class="flex items-center justify-between mb-6 px-2">
                                 <h2 class="text-2xl font-bold text-white">Top Charts</h2>
@@ -264,14 +263,19 @@
                 </div>
             </main>
 
-            <!-- Floating Glassy Notch Player (Initially Hidden) -->
-            <div id="player-bar" class="fixed bottom-8 glass-notch rounded-[2.5rem] p-4 z-50 w-[92%] max-w-5xl">
+            <!-- Floating Glassy Notch Player -->
+            <div id="player-bar" class="fixed bottom-8 glass-notch rounded-[2.5rem] p-4 z-50 w-[92%] max-w-5xl overflow-hidden">
+                <!-- Mobile Progress Bar (Placed at the very top edge of the notch) -->
+                <div class="absolute top-0 left-0 right-0 h-1 bg-white/5 md:hidden">
+                    <div id="mobile-progress-bar" class="h-full bg-blue-500 w-0 transition-all duration-100"></div>
+                </div>
+
                 <div class="max-w-screen-2xl mx-auto flex items-center justify-between gap-6 px-2">
                     
                     <!-- Track Info -->
                     <div class="flex items-center gap-4 flex-1 min-w-0">
                         <img id="player-cover-art" src="image_4385c5.png" class="w-12 h-12 rounded-2xl object-cover shadow-lg border border-white/5">
-                        <div class="overflow-hidden">
+                        <div class="overflow-hidden text-left">
                             <h4 id="player-title" class="font-bold text-white text-sm truncate">Ready to Play</h4>
                             <p id="player-artist" class="text-[10px] text-gray-400 truncate mt-0.5 font-medium uppercase tracking-wider">Select a song...</p>
                         </div>
@@ -292,7 +296,7 @@
                             </button>
                         </div>
                         
-                        <!-- Progress Bar (LTR) -->
+                        <!-- Progress Bar (Desktop) -->
                         <div class="w-full flex items-center gap-3 px-4">
                             <span id="current-time" class="text-[9px] font-bold text-gray-500 w-8 text-right">0:00</span>
                             <div class="flex-1 h-1 bg-white/10 rounded-full cursor-pointer relative group" id="progress-container">
@@ -312,7 +316,11 @@
                                 <div class="absolute inset-y-0 left-0 bg-white/40 w-2/3"></div>
                              </div>
                         </div>
-                        <button id="mobile-play-pause-btn" class="md:hidden w-10 h-10 bg-white text-black rounded-full flex items-center justify-center font-bold">▶</button>
+                        <!-- Fixed Mobile Play Button with SVG Icons -->
+                        <button id="mobile-play-pause-btn" class="md:hidden w-10 h-10 bg-white text-black rounded-full flex items-center justify-center font-bold">
+                            <svg id="mobile-play-icon" width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            <svg id="mobile-pause-icon" class="hidden" width="18" height="18" fill="currentColor" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -330,13 +338,36 @@
             const player = document.getElementById('audio-player');
             const bar = document.getElementById('player-bar');
             
+            // Re-bind icon toggle for mobile button explicitly if app.js doesn't
+            const mobilePlayIcon = document.getElementById('mobile-play-icon');
+            const mobilePauseIcon = document.getElementById('mobile-pause-icon');
+            const desktopPlayIcon = document.getElementById('play-icon');
+            const desktopPauseIcon = document.getElementById('pause-icon');
+
+            const updateIcons = (isPlaying) => {
+                if (isPlaying) {
+                    mobilePlayIcon?.classList.add('hidden');
+                    mobilePauseIcon?.classList.remove('hidden');
+                    desktopPlayIcon?.classList.add('hidden');
+                    desktopPauseIcon?.classList.remove('hidden');
+                } else {
+                    mobilePlayIcon?.classList.remove('hidden');
+                    mobilePauseIcon?.classList.add('hidden');
+                    desktopPlayIcon?.classList.remove('hidden');
+                    desktopPauseIcon?.classList.add('hidden');
+                }
+            };
+
             if (player && bar) {
-                // When audio source changes or play starts, show the bar
                 player.addEventListener('play', () => {
                     bar.classList.add('active');
+                    updateIcons(true);
                 });
                 
-                // Also catch 'loadstart' to show it as soon as a song is picked
+                player.addEventListener('pause', () => {
+                    updateIcons(false);
+                });
+                
                 player.addEventListener('loadstart', () => {
                     if (player.src && !player.src.endsWith('/')) {
                         bar.classList.add('active');
