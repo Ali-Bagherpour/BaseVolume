@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Genres - BaseVolume</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Vazirmatn:wght@400;500;700&display=swap" rel="stylesheet">
-    
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -37,33 +34,43 @@
         }
     </script>
     <style>
-        /* Global Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0A0A0A; }
-        ::-webkit-scrollbar-thumb { background: #3E3E3E; border-radius: 10px; }
-        
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .sidebar-transition { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-
-        /* Glassmorphism Utility */
-        .glass-effect { background: rgba(10, 10, 10, 0.75); backdrop-filter: blur(12px); }
-
-        /* Notch Player Glass */
+        ::-webkit-scrollbar { 
+            width: 6px; 
+        }
+        ::-webkit-scrollbar-track { 
+            background: #0A0A0A; 
+        }
+        ::-webkit-scrollbar-thumb { 
+            background: #3E3E3E; border-radius: 10px; 
+        }
+        .no-scrollbar::-webkit-scrollbar { 
+            display: none; 
+        }
+        .sidebar-transition { 
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        .glass-effect { 
+            background: rgba(10, 10, 10, 0.75); 
+            backdrop-filter: blur(12px); 
+        }
         .glass-notch { 
             background: rgba(20, 20, 20, 0.85); 
             backdrop-filter: blur(28px) saturate(180%); 
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
         }
-
-        /* Premium Cards */
-        .premium-card { transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.03); }
-        .premium-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
-
-        /* Progress Bars */
-        #progress-bar, #mobile-progress-bar { transition: width 0.1s linear; }
-
-        /* Notch Player Animation */
+        .premium-card { 
+            transition: all 0.3s ease; 
+            border: 1px solid rgba(255,255,255,0.03); 
+        }
+        .premium-card:hover { 
+            transform: translateY(-5px); 
+            background: rgba(255,255,255,0.05); 
+            border-color: rgba(255,255,255,0.1); 
+        }
+        #progress-bar, #mobile-progress-bar { 
+            transition: width 0.1s linear; 
+        }
         #player-bar {
             left: 50%;
             transform: translate(-50%, 150%);
@@ -76,8 +83,6 @@
             opacity: 1;
             pointer-events: auto;
         }
-
-        /* Live Search Dropdown */
         #search-results {
             animation: fadeIn 0.3s ease-out forwards;
         }
@@ -85,22 +90,42 @@
             animation: fadeOut 0.2s ease-in forwards;
             display: none !important;
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-8px); } }
-
-        #search-results::-webkit-scrollbar { width: 6px; }
-        #search-results::-webkit-scrollbar-track { background: transparent; }
-        #search-results::-webkit-scrollbar-thumb { background: #3E3E3E; border-radius: 3px; }
+        @keyframes fadeIn { 
+            from { 
+                opacity: 0; 
+                transform: translateY(-8px); 
+            } 
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            } 
+        }
+        @keyframes fadeOut { 
+            from { 
+                opacity: 1; 
+                transform: translateY(0); 
+            } 
+            to { 
+                opacity: 0; 
+                transform: translateY(-8px); 
+            } 
+        }
+        #search-results::-webkit-scrollbar { 
+            width: 6px; 
+        }
+        #search-results::-webkit-scrollbar-track { 
+            background: transparent; 
+        }
+        #search-results::-webkit-scrollbar-thumb { 
+            background: #3E3E3E; 
+            border-radius: 3px; 
+        }
     </style>
 </head>
 <body class="bg-gray-950 text-gray-300 font-sans antialiased overflow-hidden">
-
     <div class="flex h-screen overflow-hidden relative">
-        
-        <!-- Mobile Overlay -->
         <div id="sidebar-overlay" class="fixed inset-0 bg-black/70 z-40 hidden lg:hidden transition-opacity"></div>
 
-        <!-- Sidebar -->
         <aside id="main-sidebar" class="fixed lg:static inset-y-0 left-0 w-64 bg-gray-950/90 glass-effect p-6 z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-400 flex flex-col border-r border-gray-800">
             <div class="flex items-center gap-3 mb-10">
                 <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
@@ -120,12 +145,12 @@
                 <div>
                     <h3 class="text-[10px] text-gray-500 uppercase font-bold tracking-[0.2em] mb-4 px-2">Menu</h3>
                     <ul class="space-y-1">
-                        <!-- Note: Links use ../ to go back to root -->
                         <li><a href="../index.html" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800 transition-all">Explore</a></li>
                         <li><a href="genres.html" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-white bg-gray-800 font-medium shadow-lg">Genres</a></li>
                         <li><a href="artists.html" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800 transition-all">Artists</a></li>
                     </ul>
                 </div>
+
                 <div>
                     <h3 class="text-[10px] text-gray-500 uppercase font-bold tracking-[0.2em] mb-4 px-2">Library</h3>
                     <ul class="space-y-1">
@@ -135,7 +160,6 @@
                 </div>
             </nav>
 
-            <!-- Login Relocated Here -->
             <div class="mt-auto pt-6 border-t border-gray-800">
                 <a href="https://admin.basevolume.ir" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800 transition-all group">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:text-blue-500 transition-colors"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
@@ -148,9 +172,7 @@
             </button>
         </aside>
 
-        <!-- Main Content -->
         <div class="flex-1 flex flex-col overflow-hidden">
-            <!-- Header -->
             <header class="bg-gray-950/80 glass-effect border-b border-gray-800 p-4 sticky top-0 z-30">
                 <div class="flex items-center max-w-7xl mx-auto w-full gap-4 lg:gap-0">
                     <div class="flex items-center gap-4 w-auto lg:w-1/4">
@@ -160,7 +182,6 @@
                         <h2 class="text-xs font-black text-gray-500 uppercase tracking-[0.3em] hidden lg:block">Genres</h2>
                     </div>
 
-                    <!-- Live Search (Redirects functionality) -->
                     <div class="flex-1 flex justify-center">
                         <div class="w-full max-w-lg relative group" id="search-container">
                             <input type="text" id="search-input" placeholder="Search songs & artists..." class="w-full bg-gray-800/80 backdrop-blur-md border border-gray-700 rounded-full px-12 py-3 text-sm text-gray-200 outline-none focus:ring-2 focus:ring-blue-600 transition-all placeholder-gray-500">
@@ -170,13 +191,10 @@
                             <div id="search-results" class="absolute z-50 w-full top-14 max-h-96 overflow-y-auto bg-gray-900/90 glass-effect border border-gray-700/50 rounded-3xl shadow-2xl backdrop-blur-xl hidden"></div>
                         </div>
                     </div>
-
-                    <!-- Placeholder for layout balance -->
                     <div class="w-auto lg:w-1/4"></div>
                 </div>
             </header>
 
-            <!-- Main Scrollable Area -->
             <main class="flex-1 overflow-y-auto p-4 md:p-8 pb-40">
                 <div class="max-w-7xl mx-auto">
                     <div class="mb-10">
@@ -184,110 +202,83 @@
                         <p class="text-gray-400">Explore our extensive collection of music organized by genre.</p>
                     </div>
 
-                    <!-- Genre Grid -->
                     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                        
-                        <!-- Pop -->
                         <div class="aspect-[4/3] rounded-3xl bg-gradient-to-br from-pink-500 to-rose-600 p-6 flex items-end premium-card shadow-lg cursor-pointer group">
                             <div>
                                 <h3 class="text-2xl font-bold text-white group-hover:scale-105 transition-transform origin-bottom-left">Pop</h3>
                                 <p class="text-xs text-white/70 mt-1">Top hits & trends</p>
                             </div>
                         </div>
-
-                        <!-- Rock -->
                         <div class="aspect-[4/3] rounded-3xl bg-gradient-to-br from-purple-500 to-indigo-600 p-6 flex items-end premium-card shadow-lg cursor-pointer group">
                             <div>
                                 <h3 class="text-2xl font-bold text-white group-hover:scale-105 transition-transform origin-bottom-left">Rock</h3>
                                 <p class="text-xs text-white/70 mt-1">Classics & Modern</p>
                             </div>
                         </div>
-
-                        <!-- Hip Hop -->
                         <div class="aspect-[4/3] rounded-3xl bg-gradient-to-br from-blue-500 to-cyan-600 p-6 flex items-end premium-card shadow-lg cursor-pointer group">
                             <div>
                                 <h3 class="text-2xl font-bold text-white group-hover:scale-105 transition-transform origin-bottom-left">Hip Hop</h3>
                                 <p class="text-xs text-white/70 mt-1">Rap & Trap</p>
                             </div>
                         </div>
-
-                        <!-- Jazz -->
                         <div class="aspect-[4/3] rounded-3xl bg-gradient-to-br from-orange-500 to-amber-600 p-6 flex items-end premium-card shadow-lg cursor-pointer group">
                             <div>
                                 <h3 class="text-2xl font-bold text-white group-hover:scale-105 transition-transform origin-bottom-left">Jazz</h3>
                                 <p class="text-xs text-white/70 mt-1">Smooth & Classic</p>
                             </div>
                         </div>
-
-                        <!-- Electronic -->
                         <div class="aspect-[4/3] rounded-3xl bg-gradient-to-br from-teal-500 to-emerald-600 p-6 flex items-end premium-card shadow-lg cursor-pointer group">
                             <div>
                                 <h3 class="text-2xl font-bold text-white group-hover:scale-105 transition-transform origin-bottom-left">Electronic</h3>
                                 <p class="text-xs text-white/70 mt-1">House & Techno</p>
                             </div>
                         </div>
-
-                        <!-- R&B -->
                         <div class="aspect-[4/3] rounded-3xl bg-gradient-to-br from-fuchsia-600 to-pink-600 p-6 flex items-end premium-card shadow-lg cursor-pointer group">
                             <div>
                                 <h3 class="text-2xl font-bold text-white group-hover:scale-105 transition-transform origin-bottom-left">R&B</h3>
                                 <p class="text-xs text-white/70 mt-1">Soul & Rhythm</p>
                             </div>
                         </div>
-
-                        <!-- Classical -->
                         <div class="aspect-[4/3] rounded-3xl bg-gradient-to-br from-slate-600 to-slate-800 p-6 flex items-end premium-card shadow-lg cursor-pointer group">
                             <div>
                                 <h3 class="text-2xl font-bold text-white group-hover:scale-105 transition-transform origin-bottom-left">Classical</h3>
                                 <p class="text-xs text-white/70 mt-1">Orchestral & Piano</p>
                             </div>
                         </div>
-
-                        <!-- Metal -->
                         <div class="aspect-[4/3] rounded-3xl bg-gradient-to-br from-gray-800 to-black border border-gray-700 p-6 flex items-end premium-card shadow-lg cursor-pointer group">
                             <div>
                                 <h3 class="text-2xl font-bold text-white group-hover:scale-105 transition-transform origin-bottom-left">Metal</h3>
                                 <p class="text-xs text-white/70 mt-1">Heavy & Thrash</p>
                             </div>
                         </div>
-
-                        <!-- Lo-Fi -->
                         <div class="aspect-[4/3] rounded-3xl bg-gradient-to-br from-indigo-300 to-purple-400 p-6 flex items-end premium-card shadow-lg cursor-pointer group">
                             <div>
                                 <h3 class="text-2xl font-bold text-white group-hover:scale-105 transition-transform origin-bottom-left">Lo-Fi</h3>
                                 <p class="text-xs text-white/70 mt-1">Chill & Study</p>
                             </div>
                         </div>
-
-                        <!-- Country -->
                         <div class="aspect-[4/3] rounded-3xl bg-gradient-to-br from-yellow-600 to-orange-700 p-6 flex items-end premium-card shadow-lg cursor-pointer group">
                             <div>
                                 <h3 class="text-2xl font-bold text-white group-hover:scale-105 transition-transform origin-bottom-left">Country</h3>
                                 <p class="text-xs text-white/70 mt-1">Folk & Acoustic</p>
                             </div>
                         </div>
-                        
-                        <!-- Reggae -->
                         <div class="aspect-[4/3] rounded-3xl bg-gradient-to-br from-green-500 to-yellow-500 p-6 flex items-end premium-card shadow-lg cursor-pointer group">
                             <div>
                                 <h3 class="text-2xl font-bold text-white group-hover:scale-105 transition-transform origin-bottom-left">Reggae</h3>
                                 <p class="text-xs text-white/70 mt-1">Island Vibes</p>
                             </div>
                         </div>
-                        
-                        <!-- Blues -->
                         <div class="aspect-[4/3] rounded-3xl bg-gradient-to-br from-blue-800 to-indigo-900 p-6 flex items-end premium-card shadow-lg cursor-pointer group">
                             <div>
                                 <h3 class="text-2xl font-bold text-white group-hover:scale-105 transition-transform origin-bottom-left">Blues</h3>
                                 <p class="text-xs text-white/70 mt-1">Soulful & Deep</p>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </main>
 
-            <!-- Notch Player (Visual Only - Persistent state requires SPA or Backend) -->
             <div id="player-bar" class="fixed bottom-8 glass-notch rounded-[2.5rem] p-4 z-50 w-[92%] max-w-5xl overflow-hidden hidden">
                 <div class="max-w-screen-2xl mx-auto flex items-center justify-between gap-6 px-2">
                     <div class="flex items-center gap-4 flex-1 min-w-0">
@@ -302,40 +293,34 @@
         </div>
     </div>
 
-    <!-- Minimal Script for Navigation & Mobile Toggle -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Sidebar toggle logic
+
             const sidebar = document.getElementById('main-sidebar');
             const overlay = document.getElementById('sidebar-overlay');
             const openSidebarBtn = document.getElementById('open-sidebar');
             const closeSidebarBtn = document.getElementById('close-sidebar');
+            const searchInput = document.getElementById('search-input');
+            const searchResults = document.getElementById('search-results');
+            openSidebarBtn?.addEventListener('click', toggleSidebar);
+            closeSidebarBtn?.addEventListener('click', toggleSidebar);
+            overlay?.addEventListener('click', toggleSidebar);
+            const API_URL = 'https://groovy-backend.alibagherpour-sadafi.workers.dev'; 
+            const cleanBaseUrl = API_URL.replace(/\/$/, '');
 
             function toggleSidebar() {
                 sidebar.classList.toggle('-translate-x-full');
                 overlay.classList.toggle('hidden');
             }
 
-            openSidebarBtn?.addEventListener('click', toggleSidebar);
-            closeSidebarBtn?.addEventListener('click', toggleSidebar);
-            overlay?.addEventListener('click', toggleSidebar);
-
-            // Live Search Logic (Redirects to Home with query)
-            const searchInput = document.getElementById('search-input');
-            const searchResults = document.getElementById('search-results');
-            const API_URL = 'https://groovy-backend.alibagherpour-sadafi.workers.dev'; 
-            const cleanBaseUrl = API_URL.replace(/\/$/, '');
-
             let searchTimeout;
             searchInput?.addEventListener('input', (e) => {
                 clearTimeout(searchTimeout);
                 const query = e.target.value.trim();
-
                 if (query.length < 2) {
                     searchResults?.classList.add('hidden');
                     return;
                 }
-
                 searchTimeout = setTimeout(async () => {
                     try {
                         const res = await fetch(`${cleanBaseUrl}/search?q=${encodeURIComponent(query)}`);
@@ -350,11 +335,9 @@
             function renderSearchResults(songs, artists) {
                 if (!searchResults) return;
                 searchResults.innerHTML = '';
-
                 if (songs.length === 0 && artists.length === 0) {
                     searchResults.innerHTML = '<div class="p-4 text-sm text-gray-400 text-center">No results found.</div>';
                 } else {
-                    // Artists first
                     artists.forEach(artist => {
                         const div = document.createElement('div');
                         div.className = 'flex items-center gap-3 p-3 cursor-pointer hover:bg-gray-700/50 transition-colors';
@@ -366,14 +349,12 @@
                             </div>
                         `;
                         div.addEventListener('click', () => {
-                            // Save filter and go to home
                             localStorage.setItem('groovyFilterArtist', artist.name);
                             window.location.href = '../index.html'; 
                         });
                         searchResults.appendChild(div);
                     });
 
-                    // Songs
                     songs.forEach(song => {
                         const div = document.createElement('div');
                         div.className = 'flex items-center gap-3 p-3 cursor-pointer hover:bg-gray-700/50 transition-colors';
@@ -385,11 +366,6 @@
                             </div>
                         `;
                         div.addEventListener('click', () => {
-                            // In a multi-page app, the simplest way to play a specific song on Home 
-                            // is usually passing an ID or using localStorage to signal "Play this".
-                            // For now, we redirect to Home which will just load default state, 
-                            // unless we build a "continue playing" system.
-                            // Let's redirect to home.
                             window.location.href = '../index.html';
                         });
                         searchResults.appendChild(div);
@@ -397,8 +373,6 @@
                 }
                 searchResults.classList.remove('hidden');
             }
-
-            // Close search dropdown on outside click
             document.addEventListener('click', (e) => {
                 if (!e.target.closest('#search-container')) {
                     searchResults?.classList.add('hidden');

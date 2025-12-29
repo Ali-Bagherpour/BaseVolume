@@ -4,11 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Favourites - BaseVolume</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Vazirmatn:wght@400;500;700&display=swap" rel="stylesheet">
-    
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -37,33 +34,44 @@
         }
     </script>
     <style>
-        /* Global Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0A0A0A; }
-        ::-webkit-scrollbar-thumb { background: #3E3E3E; border-radius: 10px; }
-        
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .sidebar-transition { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-
-        /* Glassmorphism Utility */
-        .glass-effect { background: rgba(10, 10, 10, 0.75); backdrop-filter: blur(12px); }
-
-        /* Notch Player Glass */
+        ::-webkit-scrollbar { 
+            width: 6px; 
+        }
+        ::-webkit-scrollbar-track { 
+            background: #0A0A0A; 
+        }
+        ::-webkit-scrollbar-thumb { 
+            background: #3E3E3E; 
+            border-radius: 10px; 
+        }
+        .no-scrollbar::-webkit-scrollbar { 
+            display: none; 
+        }
+        .sidebar-transition { 
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        .glass-effect { 
+            background: rgba(10, 10, 10, 0.75); 
+            backdrop-filter: blur(12px); 
+        }
         .glass-notch { 
             background: rgba(20, 20, 20, 0.85); 
             backdrop-filter: blur(28px) saturate(180%); 
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
         }
-
-        /* Premium Cards */
-        .premium-card { transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.03); }
-        .premium-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
-
-        /* Progress Bars */
-        #progress-bar, #mobile-progress-bar { transition: width 0.1s linear; }
-
-        /* Notch Player Animation */
+        .premium-card { 
+            transition: all 0.3s ease; 
+            border: 1px solid rgba(255,255,255,0.03); 
+        }
+        .premium-card:hover { 
+            transform: translateY(-5px); 
+            background: rgba(255,255,255,0.05); 
+            border-color: rgba(255,255,255,0.1); 
+        }
+        #progress-bar, #mobile-progress-bar { 
+            transition: width 0.1s linear; 
+        }
         #player-bar {
             left: 50%;
             transform: translate(-50%, 150%);
@@ -76,8 +84,6 @@
             opacity: 1;
             pointer-events: auto;
         }
-
-        /* Live Search Dropdown */
         #search-results {
             animation: fadeIn 0.3s ease-out forwards;
         }
@@ -85,22 +91,40 @@
             animation: fadeOut 0.2s ease-in forwards;
             display: none !important;
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-8px); } }
-
-        #search-results::-webkit-scrollbar { width: 6px; }
-        #search-results::-webkit-scrollbar-track { background: transparent; }
-        #search-results::-webkit-scrollbar-thumb { background: #3E3E3E; border-radius: 3px; }
+        @keyframes fadeIn { 
+            from { 
+                opacity: 0; 
+                transform: translateY(-8px); 
+            } 
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            } 
+        }
+        @keyframes fadeOut { 
+            from { 
+                opacity: 1; 
+                transform: translateY(0); 
+            } to { 
+                opacity: 0; 
+                transform: translateY(-8px); 
+            } 
+        }
+        #search-results::-webkit-scrollbar { 
+            width: 6px; 
+        }
+        #search-results::-webkit-scrollbar-track { 
+            background: transparent; 
+        }
+        #search-results::-webkit-scrollbar-thumb { 
+            background: #3E3E3E; 
+            border-radius: 3px; 
+        }
     </style>
 </head>
 <body class="bg-gray-950 text-gray-300 font-sans antialiased overflow-hidden">
-
     <div class="flex h-screen overflow-hidden relative">
-        
-        <!-- Mobile Overlay -->
         <div id="sidebar-overlay" class="fixed inset-0 bg-black/70 z-40 hidden lg:hidden transition-opacity"></div>
-
-        <!-- Sidebar -->
         <aside id="main-sidebar" class="fixed lg:static inset-y-0 left-0 w-64 bg-gray-950/90 glass-effect p-6 z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-400 flex flex-col border-r border-gray-800">
             <div class="flex items-center gap-3 mb-10">
                 <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
@@ -125,6 +149,7 @@
                         <li><a href="artists.html" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800 transition-all">Artists</a></li>
                     </ul>
                 </div>
+
                 <div>
                     <h3 class="text-[10px] text-gray-500 uppercase font-bold tracking-[0.2em] mb-4 px-2">Library</h3>
                     <ul class="space-y-1">
@@ -134,7 +159,6 @@
                 </div>
             </nav>
 
-            <!-- Login Relocated Here -->
             <div class="mt-auto pt-6 border-t border-gray-800">
                 <a href="../login.html" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800 transition-all group">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:text-blue-500 transition-colors"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
@@ -147,9 +171,7 @@
             </button>
         </aside>
 
-        <!-- Main Content -->
         <div class="flex-1 flex flex-col overflow-hidden">
-            <!-- Header -->
             <header class="bg-gray-950/80 glass-effect border-b border-gray-800 p-4 sticky top-0 z-30">
                 <div class="flex items-center max-w-7xl mx-auto w-full">
                     <div class="flex items-center gap-4 w-1/4">
@@ -159,7 +181,6 @@
                         <h2 class="text-xs font-black text-gray-500 uppercase tracking-[0.3em] hidden lg:block">Library</h2>
                     </div>
 
-                    <!-- Live Search -->
                     <div class="flex-1 flex justify-center">
                         <div class="w-full max-w-lg relative group" id="search-container">
                             <input type="text" id="search-input" placeholder="Search songs & artists..." class="w-full bg-gray-800/80 backdrop-blur-md border border-gray-700 rounded-full px-12 py-3 text-sm text-gray-200 outline-none focus:ring-2 focus:ring-blue-600 transition-all placeholder-gray-500">
@@ -172,7 +193,6 @@
                 </div>
             </header>
 
-            <!-- Main Scrollable Area -->
             <main class="flex-1 overflow-y-auto p-4 md:p-8 pb-40">
                 <div class="max-w-7xl mx-auto">
                     <div class="flex items-center justify-between mb-8">
@@ -182,17 +202,14 @@
                         </div>
                     </div>
 
-                    <!-- Favourites List Container -->
                     <div class="bg-gray-800/20 rounded-[2rem] border border-gray-800/40 p-4">
                         <ul id="favourites-list" class="space-y-2">
-                            <!-- Filled by JS -->
                             <li class="p-8 text-center text-gray-500 italic">Loading your library...</li>
                         </ul>
                     </div>
                 </div>
             </main>
 
-            <!-- Notch Player -->
             <div id="player-bar" class="fixed bottom-8 glass-notch rounded-[2.5rem] p-4 z-50 w-[92%] max-w-5xl overflow-hidden">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-white/5 md:hidden"><div id="mobile-progress-bar" class="h-full bg-blue-500 w-0"></div></div>
                 <div class="max-w-screen-2xl mx-auto flex items-center justify-between gap-6 px-2">
@@ -213,6 +230,7 @@
                             </button>
                             <button id="next-btn" class="text-gray-400 hover:text-white"><svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
                         </div>
+
                         <div class="w-full flex items-center gap-3 px-4">
                             <span id="current-time" class="text-[9px] font-bold text-gray-500 w-8 text-right">0:00</span>
                             <div id="progress-container" class="flex-1 h-1 bg-white/10 rounded-full cursor-pointer relative group">
@@ -234,20 +252,14 @@
             </div>
         </div>
     </div>
-
     <audio id="audio-player" preload="metadata"></audio>
-
-    <!-- Page Logic -->
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             const FAVOURITES_KEY = 'groovyFavouriteSongs';
-            const RECENTS_KEY = 'groovyRecentSongs'; // Need this to add to recents when playing
+            const RECENTS_KEY = 'groovyRecentSongs';
             const API_URL = 'https://groovy-backend.alibagherpour-sadafi.workers.dev';
             const cleanBaseUrl = API_URL.replace(/\/$/, '');
-            
             const favouritesList = document.getElementById('favourites-list');
-            
-            // Player Elements
             const audio = document.getElementById('audio-player');
             const playerBar = document.getElementById('player-bar');
             const playerTitle = document.getElementById('player-title');
@@ -271,7 +283,6 @@
             let currentPlaylist = [];
             let currentSongIndex = 0;
 
-            // --- 1. Fetch Data & Render Favourites ---
             async function init() {
                 try {
                     const res = await fetch(`${cleanBaseUrl}/all`);
@@ -286,11 +297,8 @@
 
             function renderFavourites() {
                 const favSrcs = JSON.parse(localStorage.getItem(FAVOURITES_KEY)) || [];
-                
-                // Filter full song objects based on saved SRCs
                 const favSongs = musicDatabase.filter(song => favSrcs.includes(song.src));
-                currentPlaylist = favSongs; // Set playlist context
-
+                currentPlaylist = favSongs;
                 if (favSongs.length === 0) {
                     favouritesList.innerHTML = `
                         <li class="p-12 text-center flex flex-col items-center gap-4">
@@ -325,12 +333,9 @@
                     </li>
                 `).join('');
 
-                // Attach Listeners
                 document.querySelectorAll('.song-item').forEach(item => {
                     item.addEventListener('click', (e) => {
-                        // If delete button clicked, don't play
                         if (e.target.closest('.remove-fav-btn')) return;
-
                         const idx = parseInt(item.getAttribute('data-idx'));
                         currentSongIndex = idx;
                         loadSong(idx);
@@ -340,7 +345,7 @@
 
                 document.querySelectorAll('.remove-fav-btn').forEach(btn => {
                     btn.addEventListener('click', (e) => {
-                        e.stopPropagation(); // Stop bubble to li
+                        e.stopPropagation();
                         const src = btn.getAttribute('data-src');
                         removeFavourite(src);
                     });
@@ -351,26 +356,20 @@
                 let favs = JSON.parse(localStorage.getItem(FAVOURITES_KEY)) || [];
                 favs = favs.filter(f => f !== src);
                 localStorage.setItem(FAVOURITES_KEY, JSON.stringify(favs));
-                renderFavourites(); // Re-render list
+                renderFavourites();
             }
 
-            // --- 2. Player Logic ---
             function loadSong(index) {
                 if (!currentPlaylist[index]) return;
                 const song = currentPlaylist[index];
-
                 audio.src = song.src;
                 playerTitle.textContent = song.title;
                 playerArtist.textContent = song.artist;
                 playerCoverArt.src = song.cover;
-                
                 progressBar.style.width = '0%';
                 mobileProgressBar.style.width = '0%';
                 currentTimeEl.textContent = '0:00';
-                
-                playerBar.classList.add('active'); // Show player
-
-                // Add to Recents as well
+                playerBar.classList.add('active');
                 addSongToRecents(song);
             }
 
@@ -381,9 +380,17 @@
                 localStorage.setItem(RECENTS_KEY, JSON.stringify(recents.slice(0, 20)));
             }
 
-            function playSong() { audio.play().catch(e => console.error(e)); }
-            function pauseSong() { audio.pause(); }
-            function togglePlayPause() { audio.paused ? playSong() : pauseSong(); }
+            function playSong() { 
+                audio.play().catch(e => console.error(e)); 
+            }
+
+            function pauseSong() { 
+                audio.pause(); 
+            }
+
+            function togglePlayPause() { 
+                audio.paused ? playSong() : pauseSong(); 
+            }
             
             function updatePlayerIcons(isPlaying) {
                 if (isPlaying) {
@@ -417,7 +424,6 @@
             mobilePlayBtn?.addEventListener('click', togglePlayPause);
             nextBtn?.addEventListener('click', nextSong);
             prevBtn?.addEventListener('click', prevSong);
-            
             audio.addEventListener('play', () => updatePlayerIcons(true));
             audio.addEventListener('pause', () => updatePlayerIcons(false));
             audio.addEventListener('ended', nextSong);
@@ -443,7 +449,6 @@
                 return `${m}:${s < 10 ? '0' : ''}${s}`;
             }
 
-            // --- 3. Sidebar & Search (Shared Logic) ---
             const sidebar = document.getElementById('main-sidebar');
             const overlay = document.getElementById('sidebar-overlay');
             const openSidebarBtn = document.getElementById('open-sidebar');
@@ -456,8 +461,6 @@
             openSidebarBtn?.addEventListener('click', toggleSidebar);
             closeSidebarBtn?.addEventListener('click', toggleSidebar);
             overlay?.addEventListener('click', toggleSidebar);
-
-            // Live Search
             const searchInput = document.getElementById('search-input');
             const searchResults = document.getElementById('search-results');
             let searchTimeout;
@@ -466,7 +469,6 @@
                 clearTimeout(searchTimeout);
                 const query = e.target.value.trim();
                 if (query.length < 2) { searchResults?.classList.add('hidden'); return; }
-
                 searchTimeout = setTimeout(async () => {
                     try {
                         const res = await fetch(`${cleanBaseUrl}/search?q=${encodeURIComponent(query)}`);
@@ -499,9 +501,9 @@
                 }
                 searchResults.classList.remove('hidden');
             }
-            document.addEventListener('click', (e) => { if (!e.target.closest('#search-container')) searchResults?.classList.add('hidden'); });
-
-            // Start App
+            document.addEventListener('click', (e) => { 
+                if (!e.target.closest('#search-container')) searchResults?.classList.add('hidden'); 
+            });
             init();
         });
     </script>

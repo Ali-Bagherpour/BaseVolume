@@ -3,12 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recently Played - Groovy</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Recently Played - BaseVolume</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Vazirmatn:wght@400;500;700&display=swap" rel="stylesheet">
-    
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -37,33 +34,44 @@
         }
     </script>
     <style>
-        /* Global Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0A0A0A; }
-        ::-webkit-scrollbar-thumb { background: #3E3E3E; border-radius: 10px; }
-        
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .sidebar-transition { transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
-
-        /* Glassmorphism Utility */
-        .glass-effect { background: rgba(10, 10, 10, 0.75); backdrop-filter: blur(12px); }
-
-        /* Notch Player Glass */
+        ::-webkit-scrollbar { 
+            width: 6px; 
+        }
+        ::-webkit-scrollbar-track { 
+            background: #0A0A0A; 
+        }
+        ::-webkit-scrollbar-thumb { 
+            background: #3E3E3E; 
+            border-radius: 10px; 
+        }
+        .no-scrollbar::-webkit-scrollbar { 
+            display: none; 
+        }
+        .sidebar-transition { 
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+        .glass-effect { 
+            background: rgba(10, 10, 10, 0.75); 
+            backdrop-filter: blur(12px); 
+        }
         .glass-notch { 
             background: rgba(20, 20, 20, 0.85); 
             backdrop-filter: blur(28px) saturate(180%); 
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
         }
-
-        /* Premium Cards */
-        .premium-card { transition: all 0.3s ease; border: 1px solid rgba(255,255,255,0.03); }
-        .premium-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
-
-        /* Progress Bars */
-        #progress-bar, #mobile-progress-bar { transition: width 0.1s linear; }
-
-        /* Notch Player Animation */
+        .premium-card { 
+            transition: all 0.3s ease; 
+            border: 1px solid rgba(255,255,255,0.03); 
+        }
+        .premium-card:hover { 
+            transform: translateY(-5px); 
+            background: rgba(255,255,255,0.05); 
+            border-color: rgba(255,255,255,0.1); 
+        }
+        #progress-bar, #mobile-progress-bar { 
+            transition: width 0.1s linear; 
+        }
         #player-bar {
             left: 50%;
             transform: translate(-50%, 150%);
@@ -76,8 +84,6 @@
             opacity: 1;
             pointer-events: auto;
         }
-
-        /* Live Search Dropdown */
         #search-results {
             animation: fadeIn 0.3s ease-out forwards;
         }
@@ -94,13 +100,8 @@
     </style>
 </head>
 <body class="bg-gray-950 text-gray-300 font-sans antialiased overflow-hidden">
-
     <div class="flex h-screen overflow-hidden relative">
-        
-        <!-- Mobile Overlay -->
         <div id="sidebar-overlay" class="fixed inset-0 bg-black/70 z-40 hidden lg:hidden transition-opacity"></div>
-
-        <!-- Sidebar -->
         <aside id="main-sidebar" class="fixed lg:static inset-y-0 left-0 w-64 bg-gray-950/90 glass-effect p-6 z-50 transform -translate-x-full lg:translate-x-0 transition-transform duration-400 flex flex-col border-r border-gray-800">
             <div class="flex items-center gap-3 mb-10">
                 <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
@@ -113,7 +114,7 @@
                         </linearGradient>
                     </defs>
                 </svg>
-                <span class="font-bold text-xl text-white tracking-tight">Groovy</span>
+                <span class="font-bold text-xl text-white tracking-tight">BaseVolume</span>
             </div>
 
             <nav class="space-y-8 flex-1">
@@ -134,7 +135,6 @@
                 </div>
             </nav>
 
-            <!-- Login Relocated Here -->
             <div class="mt-auto pt-6 border-t border-gray-800">
                 <a href="https://admin.basevolume.ir" class="flex items-center gap-3 px-4 py-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800 transition-all group">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="group-hover:text-blue-500 transition-colors"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
@@ -147,9 +147,7 @@
             </button>
         </aside>
 
-        <!-- Main Content -->
         <div class="flex-1 flex flex-col overflow-hidden">
-            <!-- Header -->
             <header class="bg-gray-950/80 glass-effect border-b border-gray-800 p-4 sticky top-0 z-30">
                 <div class="flex items-center max-w-7xl mx-auto w-full gap-4 lg:gap-0">
                     <div class="flex items-center gap-4 w-auto lg:w-1/4">
@@ -159,7 +157,6 @@
                         <h2 class="text-xs font-black text-gray-500 uppercase tracking-[0.3em] hidden lg:block">History</h2>
                     </div>
 
-                    <!-- Live Search -->
                     <div class="flex-1 flex justify-center">
                         <div class="w-full max-w-lg relative group" id="search-container">
                             <input type="text" id="search-input" placeholder="Search songs & artists..." class="w-full bg-gray-800/80 backdrop-blur-md border border-gray-700 rounded-full px-12 py-3 text-sm text-gray-200 outline-none focus:ring-2 focus:ring-blue-600 transition-all placeholder-gray-500">
@@ -172,7 +169,6 @@
                 </div>
             </header>
 
-            <!-- Main Scrollable Area -->
             <main class="flex-1 overflow-y-auto p-4 md:p-8 pb-40">
                 <div class="max-w-7xl mx-auto">
                     <div class="flex items-center justify-between mb-8">
@@ -185,17 +181,14 @@
                         </button>
                     </div>
 
-                    <!-- Recent List Container -->
                     <div class="bg-gray-800/20 rounded-[2rem] border border-gray-800/40 p-4">
                         <ul id="full-recent-list" class="space-y-2">
-                            <!-- Filled by JS -->
                             <li class="p-8 text-center text-gray-500 italic">Loading history...</li>
                         </ul>
                     </div>
                 </div>
             </main>
 
-            <!-- Notch Player -->
             <div id="player-bar" class="fixed bottom-8 glass-notch rounded-[2.5rem] p-4 z-50 w-[92%] max-w-5xl overflow-hidden">
                 <div class="absolute top-0 left-0 right-0 h-1 bg-white/5 md:hidden"><div id="mobile-progress-bar" class="h-full bg-blue-500 w-0"></div></div>
                 <div class="max-w-screen-2xl mx-auto flex items-center justify-between gap-6 px-2">
@@ -237,17 +230,12 @@
             </div>
         </div>
     </div>
-
     <audio id="audio-player" preload="metadata"></audio>
-
-    <!-- Page Logic -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const RECENTS_KEY = 'groovyRecentSongs';
             const recentList = document.getElementById('full-recent-list');
             const clearBtn = document.getElementById('clear-history-btn');
-            
-            // Player Elements
             const audio = document.getElementById('audio-player');
             const playerBar = document.getElementById('player-bar');
             const playerTitle = document.getElementById('player-title');
@@ -270,10 +258,9 @@
             let currentPlaylist = [];
             let currentSongIndex = 0;
 
-            // --- 1. Render Recent List ---
             function loadRecents() {
                 const recents = JSON.parse(localStorage.getItem(RECENTS_KEY)) || [];
-                currentPlaylist = recents; // Set playlist context
+                currentPlaylist = recents;
 
                 if (recents.length === 0) {
                     recentList.innerHTML = `
@@ -285,7 +272,7 @@
                             <a href="../index.html" class="text-blue-500 font-bold hover:underline">Go to Explore</a>
                         </li>
                     `;
-                    playerBar.classList.remove('active'); // Hide player if empty
+                    playerBar.classList.remove('active');
                     return;
                 }
 
@@ -305,7 +292,6 @@
                     </li>
                 `).join('');
 
-                // Attach Listeners
                 document.querySelectorAll('.song-item').forEach(item => {
                     item.addEventListener('click', () => {
                         const idx = parseInt(item.getAttribute('data-idx'));
@@ -316,26 +302,30 @@
                 });
             }
 
-            // --- 2. Player Logic ---
             function loadSong(index) {
                 if (!currentPlaylist[index]) return;
                 const song = currentPlaylist[index];
-
                 audio.src = song.src;
                 playerTitle.textContent = song.title;
                 playerArtist.textContent = song.artist;
                 playerCoverArt.src = song.cover;
-                
                 progressBar.style.width = '0%';
                 mobileProgressBar.style.width = '0%';
                 currentTimeEl.textContent = '0:00';
-                
-                playerBar.classList.add('active'); // Show player
+                playerBar.classList.add('active');
             }
 
-            function playSong() { audio.play().catch(e => console.error(e)); }
-            function pauseSong() { audio.pause(); }
-            function togglePlayPause() { audio.paused ? playSong() : pauseSong(); }
+            function playSong() { 
+                audio.play().catch(e => console.error(e)); 
+            }
+
+            function pauseSong() { 
+                audio.pause(); 
+            }
+
+            function togglePlayPause() { 
+                audio.paused ? playSong() : pauseSong(); 
+            }
             
             function updatePlayerIcons(isPlaying) {
                 if (isPlaying) {
@@ -369,10 +359,10 @@
             mobilePlayBtn?.addEventListener('click', togglePlayPause);
             nextBtn?.addEventListener('click', nextSong);
             prevBtn?.addEventListener('click', prevSong);
-            
             audio.addEventListener('play', () => updatePlayerIcons(true));
             audio.addEventListener('pause', () => updatePlayerIcons(false));
             audio.addEventListener('ended', nextSong);
+
             audio.addEventListener('timeupdate', () => {
                 if (!audio.duration) return;
                 const percent = (audio.currentTime / audio.duration) * 100;
@@ -395,15 +385,13 @@
                 return `${m}:${s < 10 ? '0' : ''}${s}`;
             }
 
-            // --- 3. Clear History ---
             clearBtn?.addEventListener('click', () => {
                 if(confirm('Are you sure you want to clear your listening history?')) {
                     localStorage.removeItem(RECENTS_KEY);
-                    loadRecents(); // Reload UI
+                    loadRecents();
                 }
             });
 
-            // --- 4. Sidebar & Search (Shared Logic) ---
             const sidebar = document.getElementById('main-sidebar');
             const overlay = document.getElementById('sidebar-overlay');
             const openSidebarBtn = document.getElementById('open-sidebar');
@@ -413,11 +401,11 @@
                 sidebar.classList.toggle('-translate-x-full');
                 overlay.classList.toggle('hidden');
             }
+
             openSidebarBtn?.addEventListener('click', toggleSidebar);
             closeSidebarBtn?.addEventListener('click', toggleSidebar);
             overlay?.addEventListener('click', toggleSidebar);
 
-            // Live Search
             const searchInput = document.getElementById('search-input');
             const searchResults = document.getElementById('search-results');
             const API_URL = 'https://groovy-backend.alibagherpour-sadafi.workers.dev'; 
@@ -427,8 +415,10 @@
             searchInput?.addEventListener('input', (e) => {
                 clearTimeout(searchTimeout);
                 const query = e.target.value.trim();
-                if (query.length < 2) { searchResults?.classList.add('hidden'); return; }
-
+                if (query.length < 2) { 
+                    searchResults?.classList.add('hidden'); 
+                    return; 
+                }
                 searchTimeout = setTimeout(async () => {
                     try {
                         const res = await fetch(`${cleanBaseUrl}/search?q=${encodeURIComponent(query)}`);
@@ -461,9 +451,11 @@
                 }
                 searchResults.classList.remove('hidden');
             }
-            document.addEventListener('click', (e) => { if (!e.target.closest('#search-container')) searchResults?.classList.add('hidden'); });
+            
+            document.addEventListener('click', (e) => { 
+                if (!e.target.closest('#search-container')) searchResults?.classList.add('hidden'); 
+            });
 
-            // Init
             loadRecents();
         });
     </script>
